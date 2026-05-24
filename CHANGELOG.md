@@ -12,3 +12,7 @@ All notable changes to this project are documented here. The format follows
 - `Verdict` taxonomy and the core dataclasses (`ParsedNumber`, `Result`, `GoldRecord`,
   `Report`).
 - `verify()` public entry point (stub; full pipeline in progress).
+- `find_numbers()` finance-aware number/unit parser: magnitudes (K/M/MM/B/bn/T),
+  currency symbols, accounting-parenthesis negatives, percent/bps with canonical ratios,
+  ranges, approximation markers, thousands separators, and "(in millions)" scale headers.
+  Public conventions documented in `PARSING_REFERENCES.md`.

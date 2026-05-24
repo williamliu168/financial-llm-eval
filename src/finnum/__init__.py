@@ -7,6 +7,7 @@ Verify the numbers in an LLM's financial answer against ground truth, and diagno
 from __future__ import annotations
 
 from ._version import __version__
+from .parse import find_numbers
 from .result import CategoryStat, GoldRecord, ParsedNumber, Report, Result, Unit
 from .verdict import FABRICATED, Verdict
 from .verify import verify
@@ -22,4 +23,5 @@ __all__ = [
     "Report",
     "Unit",
     "verify",
+    "find_numbers",
 ]
