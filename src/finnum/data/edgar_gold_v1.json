@@ -1,0 +1,194 @@
+[
+  {
+    "id": "aapl_rev_2023_exact",
+    "question": "What were Apple's total net sales in fiscal 2023?",
+    "answer_text": "Apple's total net sales for the fiscal year were $383.285 billion.",
+    "truth": 383285000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_ni_2023_exact",
+    "question": "What was Microsoft's net income for fiscal 2023?",
+    "answer_text": "Microsoft's net income for the fiscal year was $72.361 billion.",
+    "truth": 72361000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2023 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_eps_2023_exact",
+    "question": "What was Apple's diluted EPS in fiscal 2023?",
+    "answer_text": "Apple reported diluted earnings per share of $6.13.",
+    "truth": 6.13,
+    "unit": "per_share",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_eps_2024_exact",
+    "question": "What was Microsoft's diluted EPS in fiscal 2024?",
+    "answer_text": "Diluted earnings per share were $11.80 for the fiscal year.",
+    "truth": 11.80,
+    "unit": "per_share",
+    "source": "Microsoft Corp. Form 10-K, FY2024 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_ni_2023_within",
+    "question": "How much net income did Apple report in fiscal 2023?",
+    "answer_text": "Apple earned roughly $96.9 billion in net income.",
+    "truth": 96995000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_rev_2025_within",
+    "question": "What was Microsoft's revenue in fiscal 2025?",
+    "answer_text": "Microsoft's revenue for the fiscal year was about $281.50 billion.",
+    "truth": 281724000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2025 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_rev_2025_within",
+    "question": "What was Apple's revenue in fiscal 2025?",
+    "answer_text": "Apple's revenue for the fiscal year was approximately $416.0 billion.",
+    "truth": 416161000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2025 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_rev_2023_rounding",
+    "question": "What was Microsoft's revenue in fiscal 2023?",
+    "answer_text": "Microsoft's revenue for the fiscal year was about $211.9 billion.",
+    "truth": 211915000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2023 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_gm_2023_rounding",
+    "question": "What was Apple's gross margin in fiscal 2023?",
+    "answer_text": "Apple's gross margin for the fiscal year was 44.1%.",
+    "truth": 44.13,
+    "unit": "percent",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "aapl_eps_2025_rounding",
+    "question": "What was Apple's diluted EPS in fiscal 2025?",
+    "answer_text": "Apple's diluted EPS was about $7.5 for the fiscal year.",
+    "truth": 7.46,
+    "unit": "per_share",
+    "source": "Apple Inc. Form 10-K, FY2025 (CIK 0000320193)"
+  },
+  {
+    "id": "aapl_rev_2023_scale",
+    "question": "What were Apple's total net sales in fiscal 2023?",
+    "answer_text": "Apple's total net sales for the fiscal year were $383.285 million.",
+    "truth": 383285000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_ni_2025_scale",
+    "question": "What was Microsoft's net income in fiscal 2025?",
+    "answer_text": "Microsoft's net income for the fiscal year was $101.8 trillion.",
+    "truth": 101832000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2025 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_ni_2024_scale",
+    "question": "What was Apple's net income in fiscal 2024?",
+    "answer_text": "Apple's net income for the fiscal year was $93.736 million.",
+    "truth": 93736000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2024 (CIK 0000320193)"
+  },
+  {
+    "id": "aapl_ni_2023_sign",
+    "question": "What net income did Apple report in fiscal 2023?",
+    "answer_text": "Apple reported net income of $(96.995) billion.",
+    "truth": 96995000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_oi_2023_sign",
+    "question": "What was Microsoft's operating income in fiscal 2023?",
+    "answer_text": "Microsoft's operating income for the fiscal year was -$88.523 billion.",
+    "truth": 88523000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2023 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_eps_2023_sign",
+    "question": "What was Apple's diluted EPS in fiscal 2023?",
+    "answer_text": "Apple's diluted EPS for the fiscal year was $(6.13).",
+    "truth": 6.13,
+    "unit": "per_share",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "aapl_gm_2023_unit",
+    "question": "What was Apple's gross margin in fiscal 2023?",
+    "answer_text": "Apple's gross margin for the fiscal year was 4413 bps.",
+    "truth": 44.13,
+    "unit": "percent",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "aapl_nm_2023_unit",
+    "question": "What was Apple's net margin in fiscal 2023?",
+    "answer_text": "Apple's net margin for the fiscal year was 0.2531.",
+    "truth": 25.31,
+    "unit": "percent",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_om_2024_unit",
+    "question": "What was Microsoft's operating margin in fiscal 2024?",
+    "answer_text": "Microsoft's operating margin for the fiscal year was 4464 bps.",
+    "truth": 44.64,
+    "unit": "percent",
+    "source": "Microsoft Corp. Form 10-K, FY2024 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_rev_2023_missing",
+    "question": "What was Apple's revenue in fiscal 2023?",
+    "answer_text": "Apple's revenue grew year over year, though the precise figure isn't stated here.",
+    "truth": 383285000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_ni_2023_missing",
+    "question": "What was Microsoft's net income in fiscal 2023?",
+    "answer_text": "Microsoft's net income increased substantially during the fiscal year.",
+    "truth": 72361000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2023 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_ni_2023_mismatch",
+    "question": "What was Apple's net income in fiscal 2023?",
+    "answer_text": "Apple's net income for the fiscal year was $80 billion.",
+    "truth": 96995000000,
+    "unit": "currency",
+    "source": "Apple Inc. Form 10-K, FY2023 (CIK 0000320193)"
+  },
+  {
+    "id": "msft_rev_2023_fabricated",
+    "question": "What was Microsoft's revenue in fiscal 2023?",
+    "answer_text": "Microsoft's revenue for the fiscal year was $450 billion.",
+    "truth": 211915000000,
+    "unit": "currency",
+    "source": "Microsoft Corp. Form 10-K, FY2023 (CIK 0000789019)"
+  },
+  {
+    "id": "aapl_eps_2025_mismatch",
+    "question": "What was Apple's diluted EPS in fiscal 2025?",
+    "answer_text": "Apple's diluted EPS for the fiscal year was $12.40.",
+    "truth": 7.46,
+    "unit": "per_share",
+    "source": "Apple Inc. Form 10-K, FY2025 (CIK 0000320193)"
+  }
+]

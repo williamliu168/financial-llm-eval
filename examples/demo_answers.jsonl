@@ -1,0 +1,6 @@
+{"id": "ex_exact", "answer_text": "Revenue was $383.285 billion.", "truth": 383285000000, "unit": "currency"}
+{"id": "ex_scale", "answer_text": "Net income was $96.995 million.", "truth": 96995000000, "unit": "currency"}
+{"id": "ex_sign", "answer_text": "The result was $(1.2)B.", "truth": 1200000000, "unit": "currency"}
+{"id": "ex_unit", "answer_text": "Margin improved 250 bps.", "truth": 0.025, "unit": "ratio"}
+{"id": "ex_missing", "answer_text": "Revenue grew, but no figure is given.", "truth": 5000000000, "unit": "currency"}
+{"id": "ex_mismatch", "answer_text": "EPS was $12.40.", "truth": 7.46, "unit": "per_share"}

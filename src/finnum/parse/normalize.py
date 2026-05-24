@@ -63,7 +63,7 @@ def normalize_single(match: re.Match[str], default_scale: int | None) -> ParsedN
         scale = default_scale
 
     is_paren = bool(g.get("openparen"))
-    negative = is_paren or g.get("sign") in {"-", "−"}
+    negative = is_paren or g.get("sign") in {"-", "−"} or g.get("sign1") in {"-", "−"}
     if negative:
         value = -value
 

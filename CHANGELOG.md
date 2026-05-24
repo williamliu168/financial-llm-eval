@@ -25,3 +25,10 @@ All notable changes to this project are documented here. The format follows
   (scale removed); a coarse whole-number answer is not excused. Unit confusion covers
   percent ↔ ratio ↔ bps and is checked before scale for rate-tagged numbers (their
   confusions are factors of ten). All eight verdicts are now live.
+- `run_gold_set()` + `Report` aggregation, and a plain-text results table.
+- CLI subcommands `finnum verify | run | demo`, with `--fail-under` as a CI gate and
+  `--format table|json|jsonl`.
+- Bundled, public-domain EDGAR demo gold set (24 records from real 10-K figures, cited per
+  record) exercising all eight verdicts; `finnum demo` runs it offline.
+- Parser now reads a leading sign before a currency symbol (e.g. `-$88.5B`).
+- `examples/` with a runnable quickstart and a sample JSONL gold set.

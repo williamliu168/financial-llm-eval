@@ -46,6 +46,8 @@ SINGLE_RE = re.compile(
     rf"""
     (?P<approx>{_APPROX})?
     \s*
+    (?P<sign1>{_SIGN})?        # sign before the currency symbol, e.g. -$88.5B
+    \s*
     (?P<cur1>{_CUR})?          # currency before an opening paren, e.g. $(1.2)
     \s*
     (?P<openparen>\()?         # accounting-negative opening paren
