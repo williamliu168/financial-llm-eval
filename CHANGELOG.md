@@ -16,3 +16,8 @@ All notable changes to this project are documented here. The format follows
   currency symbols, accounting-parenthesis negatives, percent/bps with canonical ratios,
   ranges, approximation markers, thousands separators, and "(in millions)" scale headers.
   Public conventions documented in `PARSING_REFERENCES.md`.
+- `verify()` pipeline: extract → select → classify. Verdicts EXACT, WITHIN_TOLERANCE,
+  SCALE_ERROR, SIGN_ERROR, MISSING, MISMATCH (ROUNDING and UNIT_CONFUSION arrive next),
+  with a fixed precedence (sign before scale; compound errors stay MISMATCH) and a
+  `looks_fabricated` flag. Selection strategies: closest, first, last, only, best_verdict,
+  plus `target_hint`. Default tolerance 0.5% relative.
