@@ -31,7 +31,8 @@ def test_absolute_tolerance_kind():
 
 
 def test_relative_tolerance_scales_with_magnitude():
-    # 0.4% off a billion-dollar figure is within the 0.5% default.
-    r = verify("$1.2B", 1_204_800_000)
+    # 0.4% off a billion-dollar figure is within the 0.5% default. The answer carries more
+    # precision than the truth, so this is a tolerance pass, not a rounding match.
+    r = verify("$1.2048B", 1_200_000_000)
     assert r.verdict == Verdict.WITHIN_TOLERANCE
     assert r.rel_error == pytest.approx(0.004, rel=1e-2)

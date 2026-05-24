@@ -10,9 +10,17 @@ financial concept.
 from __future__ import annotations
 
 import math
+import re
 
 from .result import ParsedNumber, TolKind, Unit
 from .verdict import Verdict
+
+# Decimal places written in a number's surface form, e.g. "3.14" -> 2, "1,200" -> 0.
+_DECIMALS_RE = re.compile(r"\d*\.(\d+)")
+
+# Units whose confusions (bps vs % vs ratio) are factors of ten and would otherwise be
+# mislabeled as scale errors; for these we check unit confusion *before* scale.
+_RATE_UNITS = ("percent", "bps", "ratio")
 
 # How close ``expected / parsed`` must sit to a clean power of ten to call it a scale slip.
 _SCALE_TOL = 0.01
@@ -58,15 +66,47 @@ def _clean_power_of_ten(parsed_value: float, expected: float) -> int | None:
     return None
 
 
+def _decimal_places(raw_text: str) -> int:
+    match = _DECIMALS_RE.search(raw_text.replace(",", ""))
+    return len(match.group(1)) if match else 0
+
+
 def _differs_only_by_rounding(parsed: ParsedNumber, expected: float) -> bool:
-    """Placeholder until Milestone D fills in rounding detection."""
-    return False
+    """True if the answer equals the truth rounded to the precision it reported.
+
+    Comparison is done in the number's *surface* form (scale removed) so that, e.g.,
+    "$3.14B" vs a truth of 3.14159e9 is recognized as a 2-decimal rounding rather than a
+    spurious mismatch at billions scale.
+    """
+    if parsed.value == expected or parsed.scale == 0:
+        return False
+    decimals = _decimal_places(parsed.raw_text)
+    surface_parsed = parsed.value / parsed.scale
+    surface_expected = expected / parsed.scale
+    return round(surface_expected, decimals) == round(surface_parsed, decimals)
 
 
 def _unit_reinterpretation(
     parsed: ParsedNumber, expected: float, tol: float, tol_kind: TolKind
 ) -> str | None:
-    """Placeholder until Milestone D fills in unit-confusion detection."""
+    """Name the related-unit reinterpretation of ``parsed`` that lands within tolerance of
+    ``expected``, or ``None``. Covers percent ↔ ratio ↔ bps confusions."""
+    v = parsed.value
+    if parsed.unit == "percent":
+        options = [("percent→ratio", v / 100.0), ("percent→bps", v * 100.0)]
+    elif parsed.unit == "bps":
+        options = [("bps→percent", v / 100.0), ("bps→ratio", v / 10_000.0)]
+    elif parsed.unit in ("unknown", "ratio"):
+        options = [
+            ("ratio→percent", v * 100.0),
+            ("percent→ratio", v / 100.0),
+            ("ratio→bps", v * 10_000.0),
+        ]
+    else:
+        return None
+    for name, candidate in options:
+        if within_tolerance(candidate, expected, tol, tol_kind):
+            return name
     return None
 
 
@@ -119,21 +159,35 @@ def classify(
             notes.append("answer used accounting parentheses to denote a negative")
         return Verdict.SIGN_ERROR, notes, False
 
-    # 4. SCALE_ERROR — right digits, wrong order of magnitude.
-    k = _clean_power_of_ten(p, e)
-    if k is not None:
+    # 4 & 5. SCALE_ERROR vs UNIT_CONFUSION. Both surface as factor-of-ten gaps, so the
+    #        order matters: when the number carries a rate unit (%, bps) a ten-fold gap is
+    #        far more likely a unit mix-up than a magnitude slip, so test that first.
+    def scale_error() -> Verdict | None:
+        k = _clean_power_of_ten(p, e)
+        if k is None:
+            return None
         hint = " (e.g. millions vs billions)" if abs(k) == 3 else ""
         notes.append(f"right digits, wrong magnitude — off by 10^{k}{hint}")
-        return Verdict.SCALE_ERROR, notes, False
+        return Verdict.SCALE_ERROR
 
-    # 5. UNIT_CONFUSION — a related-unit reinterpretation lands within tolerance.
-    reinterpretation = _unit_reinterpretation(parsed, e, tol, tol_kind)
-    if reinterpretation is not None:
+    def unit_confusion() -> Verdict | None:
+        reinterpretation = _unit_reinterpretation(parsed, e, tol, tol_kind)
+        if reinterpretation is None:
+            return None
         notes.append(f"matches the truth under a {reinterpretation} reinterpretation")
-        return Verdict.UNIT_CONFUSION, notes, False
+        return Verdict.UNIT_CONFUSION
 
-    # 6. ROUNDING — last chance (correctly rounded but just outside tolerance).
-    if _differs_only_by_rounding(parsed, e):
+    rate_tagged = parsed.unit in _RATE_UNITS or expected_unit in _RATE_UNITS
+    checks = (unit_confusion, scale_error) if rate_tagged else (scale_error, unit_confusion)
+    for check in checks:
+        verdict = check()
+        if verdict is not None:
+            return verdict, notes, False
+
+    # 6. ROUNDING — last chance: correctly rounded but just outside tolerance. Require at
+    #    least one reported decimal, so a coarse whole-number answer (e.g. "$3B" for a
+    #    truth of $3.49B) is not excused as rounding.
+    if _decimal_places(parsed.raw_text) >= 1 and _differs_only_by_rounding(parsed, e):
         notes.append("matches the truth rounded to the reported precision")
         return Verdict.ROUNDING, notes, False
 

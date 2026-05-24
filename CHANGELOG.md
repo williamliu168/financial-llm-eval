@@ -21,3 +21,7 @@ All notable changes to this project are documented here. The format follows
   with a fixed precedence (sign before scale; compound errors stay MISMATCH) and a
   `looks_fabricated` flag. Selection strategies: closest, first, last, only, best_verdict,
   plus `target_hint`. Default tolerance 0.5% relative.
+- ROUNDING and UNIT_CONFUSION verdicts. Rounding is detected in the number's surface form
+  (scale removed); a coarse whole-number answer is not excused. Unit confusion covers
+  percent ↔ ratio ↔ bps and is checked before scale for rate-tagged numbers (their
+  confusions are factors of ten). All eight verdicts are now live.
