@@ -6,6 +6,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-24
+
+### Added
+- FinQA adapter: `load_finqa()` maps the MIT-licensed FinQA benchmark into `GoldRecord`s
+  (skipping non-numeric rows), `download_finqa()` fetches a split on demand (data not
+  bundled), `attach_answers()` attaches model outputs, and `finnum fetch-finqa` exposes
+  the downloader. Documents FinQA's table-units convention.
+
 ## [0.1.0] - 2026-05-24
 
 ### Added

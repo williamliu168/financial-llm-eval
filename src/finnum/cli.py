@@ -53,6 +53,10 @@ def build_parser() -> argparse.ArgumentParser:
             default=None,
             help="exit non-zero if the pass rate is below this fraction (CI gate)",
         )
+
+    f = sub.add_parser("fetch-finqa", help="download a FinQA split (MIT-licensed; not bundled)")
+    f.add_argument("--split", choices=["train", "dev", "test"], default="dev")
+    f.add_argument("--dest", default=".finqa_data", help="download directory (keep gitignored)")
     return parser
 
 
@@ -122,6 +126,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _cmd_run(args, _read_jsonl(args.gold))
     if args.command == "demo":
         return _cmd_run(args, list(load_demo_gold()))
+    if args.command == "fetch-finqa":  # pragma: no cover - network I/O
+        from .adapters import download_finqa
+
+        path = download_finqa(args.split, args.dest)
+        print(f"FinQA '{args.split}' available at {path}")
+        return 0
 
     parser.print_help()
     return 0

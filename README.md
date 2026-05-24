@@ -106,6 +106,29 @@ accounting parentheses, percent/bps, ranges — all from public conventions, doc
 > Deterministic where numbers matter — and a clean place to bolt on an LLM judge for the
 > *qualitative* claims that genuinely need one (a documented v0.2 extension point).
 
+## Run against FinQA
+
+[FinQA](https://github.com/czyssrs/FinQA) (Chen et al., 2021; MIT-licensed) is a public
+numeric-reasoning benchmark over S&P 500 filings. Its data isn't bundled — fetch it on
+demand and map it into finnum's gold-record shape:
+
+```bash
+finnum fetch-finqa --split dev          # downloads to ./.finqa_data (gitignored)
+```
+
+```python
+from finnum import run_gold_set
+from finnum.adapters import load_finqa, attach_answers
+
+gold = load_finqa(".finqa_data/dev.json")          # gold answers, no model answers yet
+gold = attach_answers(gold, my_model_outputs)       # {record_id: answer_text}
+report = run_gold_set(gold)
+print(report.to_table())
+```
+
+FinQA answers are in their source table's units (often millions), so compare your model's
+answers in the same convention — see the adapter docstring.
+
 ## Honest limitations
 
 A benchmark that only produces good news isn't a benchmark. `finnum` ships **5 documented

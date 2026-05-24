@@ -1,0 +1,41 @@
+[
+  {
+    "id": "AAPL/2023/page_30.pdf-1",
+    "pre_text": ["Net sales by category ..."],
+    "post_text": ["..."],
+    "table": [["", "2023", "2022"], ["Revenue", "383285", "394328"]],
+    "qa": {
+      "question": "what was the decline in net sales from 2022 to 2023, in millions?",
+      "answer": "11043",
+      "exe_ans": 11043.0,
+      "program": "subtract(394328, 383285)",
+      "gold_inds": {}
+    }
+  },
+  {
+    "id": "MSFT/2023/page_12.pdf-2",
+    "pre_text": ["..."],
+    "post_text": ["..."],
+    "table": [["", "2023", "2022"], ["Revenue", "211915", "198270"]],
+    "qa": {
+      "question": "what was the revenue growth rate from 2022 to 2023?",
+      "answer": "6.9%",
+      "exe_ans": 0.069,
+      "program": "divide(subtract(211915, 198270), 198270)",
+      "gold_inds": {}
+    }
+  },
+  {
+    "id": "XYZ/2020/page_1.pdf-3",
+    "pre_text": ["..."],
+    "post_text": ["..."],
+    "table": [],
+    "qa": {
+      "question": "did revenue increase year over year?",
+      "answer": "yes",
+      "exe_ans": "yes",
+      "program": "greater(...)",
+      "gold_inds": {}
+    }
+  }
+]
