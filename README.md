@@ -2,7 +2,7 @@
 
 > **Verify the numbers in an LLM's financial answer — and diagnose *how* they're wrong.**
 
-[![CI](https://github.com/invest-composer-william/financial-llm-eval/actions/workflows/ci.yml/badge.svg)](https://github.com/invest-composer-william/financial-llm-eval/actions/workflows/ci.yml)
+[![CI](https://github.com/williamliu168/financial-llm-eval/actions/workflows/ci.yml/badge.svg)](https://github.com/williamliu168/financial-llm-eval/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 
