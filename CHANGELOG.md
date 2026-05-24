@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-05-24
+
 ### Added
 - Project scaffold: `src` layout, packaging (`pyproject.toml`, hatchling), MIT license,
   CI (ruff + pytest on Python 3.10–3.12).
@@ -32,3 +34,7 @@ All notable changes to this project are documented here. The format follows
   record) exercising all eight verdicts; `finnum demo` runs it offline.
 - Parser now reads a leading sign before a currency symbol (e.g. `-$88.5B`).
 - `examples/` with a runnable quickstart and a sample JSONL gold set.
+- Honest-negatives regression suite: 5 documented cases finnum cannot yet resolve, kept
+  as standing `xfail(strict)` tests that run in CI, plus `KNOWN_LIMITATIONS.md`.
+- Full README: value proposition, the gap vs general-purpose eval tools, the 8-verdict
+  taxonomy, demo results, CI usage, and the honest-limitations section.
