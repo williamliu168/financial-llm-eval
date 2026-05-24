@@ -1,0 +1,76 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "financial-llm-eval"
+dynamic = ["version"]
+description = "Verify the numbers in an LLM's financial answer — and diagnose how they're wrong."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "William Liu" }]
+keywords = [
+  "llm",
+  "evaluation",
+  "eval",
+  "finance",
+  "numeric",
+  "sec",
+  "edgar",
+  "nlp",
+  "ragas",
+  "deepeval",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Financial and Insurance Industry",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Software Development :: Testing",
+  "Typing :: Typed",
+]
+dependencies = []  # pure stdlib by design
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov", "ruff>=0.4", "mypy"]
+
+[project.scripts]
+finnum = "finnum.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/invest-composer-william/financial-llm-eval"
+Repository = "https://github.com/invest-composer-william/financial-llm-eval"
+Issues = "https://github.com/invest-composer-william/financial-llm-eval/issues"
+
+[tool.hatch.version]
+path = "src/finnum/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/finnum"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["finnum"]
+branch = true
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+ignore_missing_imports = true
