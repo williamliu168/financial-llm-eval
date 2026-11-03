@@ -29,7 +29,7 @@ in CI, with no API key and no nondeterminism.
 ## Install
 
 ```bash
-pip install financial-llm-eval   # import as: finnum
+pip install git+https://github.com/williamliu168/financial-llm-eval   # import as: finnum
 ```
 
 ## 60-second example
@@ -37,13 +37,13 @@ pip install financial-llm-eval   # import as: finnum
 ```python
 from finnum import verify
 
-verify("Apple's revenue was about $1.2B", truth=1_200_000_000, unit="currency").verdict
+verify("Revenue was about $1.205B", truth=1_200_000_000, unit="currency").verdict
 # Verdict.WITHIN_TOLERANCE
 
 verify("Net income was $3.4M", truth=3_400_000_000).verdict
 # Verdict.SCALE_ERROR   — right digits, wrong magnitude (M vs B)
 
-verify("The loss was $(1.2)B", truth=-1_200_000_000).verdict
+verify("Operating income was $(1.2)B", truth=1_200_000_000).verdict
 # Verdict.SIGN_ERROR    — accounting parentheses mean negative
 
 verify("Margins widened 250 bps", truth=0.025, unit="ratio").verdict
@@ -120,8 +120,8 @@ finnum fetch-finqa --split dev          # downloads to ./.finqa_data (gitignored
 from finnum import run_gold_set
 from finnum.adapters import load_finqa, attach_answers
 
-gold = load_finqa(".finqa_data/dev.json")          # gold answers, no model answers yet
-gold = attach_answers(gold, my_model_outputs)       # {record_id: answer_text}
+gold = load_finqa(".finqa_data/dev.json")  # gold answers, no model answers yet
+gold = attach_answers(gold, my_model_outputs)  # {record_id: answer_text}
 report = run_gold_set(gold)
 print(report.to_table())
 ```

@@ -20,6 +20,13 @@ All notable changes to this project are documented here. The format follows
   EXACT) and made `select="only"`/`"first"` unusable on answers that cite a filing.
 - A "(in millions)" scale header must start at a word boundary ("within millions" no
   longer scales every bare number by 1e6).
+- `finnum demo`/`run`/`verify` no longer crash with `UnicodeEncodeError` when stdout is
+  redirected on Windows (cp1252); unencodable characters are replaced.
+- README: the install line pointed at an unpublished PyPI name; two 60-second-example
+  comments stated the wrong verdict (`about $1.2B` vs 1.2e9 is EXACT; `$(1.2)B` vs a
+  *negative* truth is EXACT, not SIGN_ERROR). README code block reformatted for
+  `ruff format --check .` (ruff 0.17 formats Markdown code blocks).
+- Type annotations: `run_gold_set(tol_kind=...)` is `TolKind`; mypy is clean.
 
 ## [0.1.1] - 2026-05-24
 

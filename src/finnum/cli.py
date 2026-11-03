@@ -11,7 +11,7 @@ from pathlib import Path
 from . import __version__
 from .adapters import load_demo_gold
 from .report import format_table
-from .result import Report
+from .result import GoldRecord, Report
 from .runner import run_gold_set
 from .select import SELECT_STRATEGIES
 from .verify import verify
@@ -100,7 +100,7 @@ def _cmd_verify(args: argparse.Namespace) -> int:
     return 0 if result.passed else 1
 
 
-def _cmd_run(args: argparse.Namespace, records: list[dict]) -> int:
+def _cmd_run(args: argparse.Namespace, records: Sequence[GoldRecord | dict]) -> int:
     report = run_gold_set(records, tol=args.tol, tol_kind=args.tol_kind, select=args.select)
     rendered = _render(report, args.format)
     if args.out:
@@ -117,6 +117,11 @@ def _cmd_run(args: argparse.Namespace, records: list[dict]) -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    # Notes contain "→"/"—"; a redirected stdout on Windows defaults to cp1252 and would
+    # raise UnicodeEncodeError mid-report. Degrade the characters instead of crashing.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="replace")
     parser = build_parser()
     args = parser.parse_args(argv)
 
