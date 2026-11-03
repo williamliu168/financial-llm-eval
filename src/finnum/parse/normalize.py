@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 
 from ..result import ParsedNumber, Unit
-from .tokens import CURRENCY_SYMBOL, MAGNITUDE, SCALE_HEADER_RE
+from .tokens import CURRENCY_SYMBOL, LOSS_CUE_RE, MAGNITUDE, SCALE_HEADER_RE
 
 _MINUS = {"-", "−"}  # ASCII hyphen-minus and the Unicode minus sign
 
@@ -66,11 +66,20 @@ def normalize_single(match: re.Match[str], default_scale: int | None) -> ParsedN
 
     is_paren = bool(g.get("openparen"))
     negative = is_paren or g.get("sign") in {"-", "−"} or g.get("sign1") in {"-", "−"}
-    if negative:
-        value = -value
 
     cur_symbol = g.get("cur1") or g.get("cur2")
     currency = CURRENCY_SYMBOL.get(cur_symbol) if cur_symbol else None
+
+    # "net loss of $1.2 billion": only for amounts (currency or magnitude), never rates, and
+    # never on top of an explicit sign (no double negation of "loss of $(1.2)B").
+    sign_from_words = (
+        not negative
+        and not g.get("unit")
+        and bool(currency or has_explicit_magnitude)
+        and LOSS_CUE_RE.search(match.string, max(0, match.start() - 80), match.start()) is not None
+    )
+    if negative or sign_from_words:
+        value = -value
 
     unit, as_ratio = _classify_unit(g.get("unit"), currency, value)
 
@@ -82,6 +91,7 @@ def normalize_single(match: re.Match[str], default_scale: int | None) -> ParsedN
         scale=scale,
         is_negative_paren=is_paren,
         is_approximate=bool(g.get("approx")),
+        sign_from_words=sign_from_words,
         currency=currency,
         as_ratio=as_ratio,
     )

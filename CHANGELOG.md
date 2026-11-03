@@ -28,6 +28,13 @@ All notable changes to this project are documented here. The format follows
   `ruff format --check .` (ruff 0.17 formats Markdown code blocks).
 - Type annotations: `run_gold_set(tol_kind=...)` is `TolKind`; mypy is clean.
 
+### Added
+- A loss stated in words carries the sign, like accounting parentheses: `"net loss of $1.2
+  billion"`, `"diluted loss per share was $0.56"`, `"negative $88.5 billion"` parse as
+  negative (amounts only; never rates, never on top of an explicit sign). Previously a
+  correct answer for a loss-making company was a SIGN_ERROR. `ParsedNumber.sign_from_words`
+  records it, and a SIGN_ERROR carries a note when the sign came from wording.
+
 ## [0.1.1] - 2026-05-24
 
 ### Added

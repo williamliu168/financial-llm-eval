@@ -89,3 +89,34 @@ def test_strict_selection_survives_citations():
         "Per the FY2024 Form 10-K, revenue was $391.04 billion", 391_040_000_000, select="only"
     )
     assert r.verdict == Verdict.EXACT
+
+
+class TestSignInWords:
+    @pytest.mark.parametrize(
+        "answer,truth",
+        [
+            ("The company reported a net loss of $1.2 billion.", -1_200_000_000),
+            ("Net income was negative $88.5 billion", -88_500_000_000),
+            ("Diluted loss per share was $0.56", -0.56),
+            ("Net loss attributable to common stockholders was $31.3 million", -31_268_000),
+            ("a net loss of $(1.2) billion", -1_200_000_000),  # no double negation
+        ],
+    )
+    def test_loss_wording_carries_the_sign(self, answer, truth):
+        assert verify(answer, truth).passed
+
+    def test_loss_stated_for_a_profit_is_a_sign_error(self):
+        r = verify("The company reported a net loss of $1.2 billion.", 1_200_000_000)
+        assert r.verdict == Verdict.SIGN_ERROR
+        assert any("in words" in n for n in r.notes)
+
+    @pytest.mark.parametrize(
+        "answer,truth",
+        [
+            ("Despite the loss, revenue was $5B", 5_000_000_000),
+            ("The loss-making unit had revenue of $5B", 5_000_000_000),
+            ("A loss of 5% of customers", 5.0),  # rates are never negated
+        ],
+    )
+    def test_loss_nearby_does_not_flip_unrelated_figures(self, answer, truth):
+        assert verify(answer, truth).verdict == Verdict.EXACT

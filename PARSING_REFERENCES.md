@@ -15,7 +15,8 @@ applies any synthesis/normalization beyond surface canonicalization.
 | Basis points: `1 bp = 0.01% = 0.0001` | Rate convention | Standard financial definition of a basis point |
 | Percent ↔ ratio: `12.5% = 0.125` | Arithmetic definition of percent | General mathematics |
 | Thousands separators (`1,234,567`) and decimal point | US/UK number formatting | CLDR / common number formatting |
-| Ranges (`$1.2–1.4B`, `1.2 to 1.4 billion`) | Guidance/estimate phrasing | General usage |
+| Ranges (`$1.2–1.4B`, `1.2 to 1.4 billion`) | Guidance/estimate phrasing; a range is one quantity, so `2% to $391B` and `from $383B to $391B` are two numbers | General usage |
+| "Net loss of $1.2B" = -1.2B; "negative $88.5B" = -88.5B | Wording that carries the sign of an amount | US GAAP captions ("Net income (loss)", "Net loss per share"); visible in any 10-K income statement |
 | Approximation markers (`~`, "about", "approximately") | Estimate phrasing | General usage |
 
 ## Acknowledged limitation (kept as an honest negative, not silently mis-parsed)

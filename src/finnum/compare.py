@@ -157,6 +157,8 @@ def classify(
         notes.append("magnitude matches but the sign is flipped")
         if parsed.is_negative_paren:
             notes.append("answer used accounting parentheses to denote a negative")
+        if parsed.sign_from_words:
+            notes.append("answer stated a loss (or 'negative') in words; read as negative")
         return Verdict.SIGN_ERROR, notes, False
 
     # 4 & 5. SCALE_ERROR vs UNIT_CONFUSION. Both surface as factor-of-ten gaps, so the

@@ -44,6 +44,7 @@ class ParsedNumber:
     scale: int = 1  # power-of-ten multiplier already folded into ``value`` (audit aid)
     is_negative_paren: bool = False
     is_approximate: bool = False
+    sign_from_words: bool = False  # negative because of "net loss of" / "negative"
     is_range: bool = False
     range_value: tuple[float, float] | None = None
     currency: str | None = None

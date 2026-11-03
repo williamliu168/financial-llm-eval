@@ -93,6 +93,21 @@ RANGE_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
+# A loss or "negative" stated in words right before a figure carries its sign, the way
+# accounting parentheses do in a table: "net loss of $1.2 billion", "diluted loss per share
+# was $0.56", "net loss attributable to common stockholders: $31.3 million".
+LOSS_CUE_RE = re.compile(
+    r"""
+    (?:\b(?:net|operating|pre-?tax|comprehensive)\s+)?\bloss(?:es)?
+    (?:\s+from\s+operations|\s+per\s+(?:basic\s+|diluted\s+)?share
+       |\s+attributable\s+to\s+[a-z][a-z\s&'.-]{0,40}?)?
+    \s*(?:of|was|were|totaled|totalled|amounted\s+to|came\s+in\s+at|:)
+    (?:\s+(?:about|approximately|roughly|around))?\s*$
+    |\bnegative\s*$
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
 # "(in thousands)", "$ in millions", "amounts in billions" → a default scale multiplier
 # applied to bare numbers that carry no explicit magnitude of their own.
 SCALE_HEADER_RE = re.compile(r"\bin\s+(thousand|million|billion)s?\b", re.IGNORECASE)
