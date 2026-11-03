@@ -71,3 +71,21 @@ class TestRanges:
 def test_candidates_are_recorded_for_transparency():
     r = verify("5 cats, 3 dogs, $7M revenue", 7_000_000)
     assert len(r.candidates) == 3
+
+
+@pytest.mark.parametrize(
+    "answer,truth",
+    [
+        ("Per its Form 10-K, diluted EPS was $6.80.", 10.0),  # "10" from "10-K"
+        ("In Q3 2026, diluted EPS was $1.50.", 3.0),  # "3" from "Q3"
+    ],
+)
+def test_identifier_digits_cannot_produce_a_false_pass(answer, truth):
+    assert not verify(answer, truth).passed
+
+
+def test_strict_selection_survives_citations():
+    r = verify(
+        "Per the FY2024 Form 10-K, revenue was $391.04 billion", 391_040_000_000, select="only"
+    )
+    assert r.verdict == Verdict.EXACT

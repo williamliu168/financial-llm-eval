@@ -14,6 +14,12 @@ All notable changes to this project are documented here. The format follows
   currency symbol sits only on the second value, or when it is a change phrased
   "from X to Y" ("ranges from X to Y" is still a range). Retires known limitation #3.
 - Ranges accept signed endpoints (`-$1.2 to -$1.4B`, `-5% to -3%`).
+- Digits inside identifiers are no longer extracted as numbers: `FY2024`, `Q3`, `1Q24`,
+  `Form 10-K`, `COVID-19`, `3-for-1`, `Item 7A`. They produced false passes under the
+  default `closest` selection (`"Per its Form 10-K, EPS was $6.80"` vs a truth of 10 was
+  EXACT) and made `select="only"`/`"first"` unusable on answers that cite a filing.
+- A "(in millions)" scale header must start at a word boundary ("within millions" no
+  longer scales every bare number by 1e6).
 
 ## [0.1.1] - 2026-05-24
 

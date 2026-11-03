@@ -95,4 +95,4 @@ RANGE_RE = re.compile(
 
 # "(in thousands)", "$ in millions", "amounts in billions" → a default scale multiplier
 # applied to bare numbers that carry no explicit magnitude of their own.
-SCALE_HEADER_RE = re.compile(r"in\s+(thousand|million|billion)s?\b", re.IGNORECASE)
+SCALE_HEADER_RE = re.compile(r"\bin\s+(thousand|million|billion)s?\b", re.IGNORECASE)
