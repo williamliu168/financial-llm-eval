@@ -35,12 +35,12 @@ KNOWN_LIMITATIONS = [
         Verdict.MISMATCH,
     ),
     (
-        "mixed_units_one_sentence",
-        "Margin improved 250 bps to 12.5%",
-        0.125,
+        "accounting_paren_range",
+        "Guidance: $(1.2)-(1.4)B",
+        -1_300_000_000.0,
         {},
         True,
-        Verdict.SCALE_ERROR,
+        Verdict.MISMATCH,
     ),
     (
         "closest_masks_fabrication",

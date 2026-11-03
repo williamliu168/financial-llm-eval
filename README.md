@@ -133,7 +133,7 @@ answers in the same convention — see the adapter docstring.
 
 A benchmark that only produces good news isn't a benchmark. `finnum` ships **5 documented
 cases it cannot yet resolve** (locale decimal commas, bare numbers missing their scale,
-mixed units in one clause, and more) as standing `xfail` regressions that run in CI — see
+accounting-parenthesis ranges, and more) as standing `xfail` regressions that run in CI — see
 [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md). Two of them have first-class mitigations
 already (`scale_hint`, `select=`).
 

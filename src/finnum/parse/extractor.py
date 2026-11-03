@@ -2,19 +2,53 @@
 
 Ranges are matched first (longest-match-wins) so a span like ``$1.2-1.4B`` is read as one
 range rather than two stray numbers; single numbers that fall inside a matched range are
-then skipped.
+then skipped. A range match whose two sides are different quantities ("grew 2% to $391B")
+or a change ("from $383B to $391B") is rejected, and its numbers are parsed individually.
 """
 
 from __future__ import annotations
+
+import re
 
 from ..result import ParsedNumber
 from .normalize import detect_scale_header, normalize_range, normalize_single
 from .tokens import RANGE_RE, SINGLE_RE
 
+# "from X to Y" states two values (a change), unless it is "ranges/ranging from X to Y".
+_FROM_BEFORE_RE = re.compile(r"\bfrom\s*$", re.IGNORECASE)
+_RANGES_FROM_BEFORE_RE = re.compile(r"\brang(?:e|es|ed|ing)\s+from\s*$", re.IGNORECASE)
+
 
 def _overlaps(span: tuple[int, int], taken: list[tuple[int, int]]) -> bool:
     start, end = span
     return any(start < t_end and t_start < end for t_start, t_end in taken)
+
+
+def _rate_kind(token: str | None) -> str | None:
+    if not token:
+        return None
+    return "percent" if token.lower() in {"%", "percent", "pct"} else "bps"
+
+
+def _is_coherent_range(m: re.Match[str], text: str) -> bool:
+    """True if a ``RANGE_RE`` match is one quantity's range, not two quantities or a change.
+
+    A rate unit is a suffix, so in a real range it sits on the second value (or both);
+    a currency symbol is a prefix, so it sits on the first value (or both).
+    """
+    g = m.groupdict()
+    lo_rate, hi_rate = _rate_kind(g["unit_lo"]), _rate_kind(g["unit"])
+    if lo_rate and lo_rate != hi_rate:  # "2% to $391B", "250 bps to 12.5%", "3% to 1,234"
+        return False
+    if hi_rate and (g["cur1"] or g["cur2"] or g["lomag"] or g["himag"]):  # "$5M to 10%"
+        return False
+    if g["cur2"] and g["cur2"] != g["cur1"]:  # "7 points to $8.2B", "$5 to €6"
+        return False
+    if g["sep"].lower() == "to":
+        before = text[max(0, m.start() - 40) : m.start()]
+        if _FROM_BEFORE_RE.search(before) and not _RANGES_FROM_BEFORE_RE.search(before):
+            return False  # "rose from $383.3B to $391.0B"
+    return True
 
 
 def find_numbers(text: str, scale_hint: int | None = None) -> list[ParsedNumber]:
@@ -31,9 +65,16 @@ def find_numbers(text: str, scale_hint: int | None = None) -> list[ParsedNumber]
     found: list[ParsedNumber] = []
     taken: list[tuple[int, int]] = []
 
-    for m in RANGE_RE.finditer(text):
-        found.append(normalize_range(m, default_scale))
-        taken.append(m.span())
+    pos = 0
+    while (m := RANGE_RE.search(text, pos)) is not None:
+        if _is_coherent_range(m, text):
+            found.append(normalize_range(m, default_scale))
+            taken.append(m.span())
+            pos = m.end()
+        else:
+            # Re-scan from just after the first value, so a genuine range that starts at
+            # the second value ("grew 2% to $1.2-1.4B") is still found.
+            pos = m.end("lo")
 
     for m in SINGLE_RE.finditer(text):
         if _overlaps(m.span(), taken):

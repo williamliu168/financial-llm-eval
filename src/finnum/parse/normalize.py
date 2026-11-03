@@ -13,6 +13,8 @@ import re
 from ..result import ParsedNumber, Unit
 from .tokens import CURRENCY_SYMBOL, MAGNITUDE, SCALE_HEADER_RE
 
+_MINUS = {"-", "−"}  # ASCII hyphen-minus and the Unicode minus sign
+
 
 def magnitude_multiplier(token: str | None) -> int:
     """Multiplier for a magnitude token ("M", "bn", "millions", ...); 1 if ``None``."""
@@ -99,6 +101,11 @@ def normalize_range(match: re.Match[str], default_scale: int | None) -> ParsedNu
     if not has_explicit_magnitude and default_scale:
         lo *= default_scale
         hi *= default_scale
+    # Signs are per endpoint and never shared: "-1% to 2%" is a legitimate range.
+    if g.get("sign_lo") in _MINUS or g.get("sign_lo_in") in _MINUS:
+        lo = -lo
+    if g.get("sign_hi") in _MINUS or g.get("sign_hi_in") in _MINUS:
+        hi = -hi
 
     midpoint = (lo + hi) / 2.0
     cur_symbol = g.get("cur1") or g.get("cur2")

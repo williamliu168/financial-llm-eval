@@ -64,20 +64,28 @@ SINGLE_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-# A numeric range, e.g. "$1.2-1.4B", "1.2 to 1.4 billion", "12% to 14%". A magnitude or
-# currency on one side is shared with the other when that side omits it.
+# A numeric range, e.g. "$1.2-1.4B", "1.2 to 1.4 billion", "12% to 14%", "-$1.2 to -$1.4B".
+# A magnitude or currency on one side is shared with the other when that side omits it.
+# The regex is deliberately permissive; ``extractor`` rejects matches whose two sides are
+# different quantities ("grew 2% to $391B") or a change ("from $383B to $391B").
 RANGE_RE = re.compile(
     rf"""
     (?P<approx>{_APPROX})?
     \s*
+    (?P<sign_lo>{_SIGN})?
+    \s*
     (?P<cur1>{_CUR})?
     \s*
+    (?P<sign_lo_in>{_SIGN})?
     (?P<lo>{_NUM})
     (?:\s*(?P<lomag>{_MAG})(?![a-z]))?
     (?:\s*(?P<unit_lo>{_PCT}|{_BPS})(?![a-z]))?   # unit on the first element, e.g. "12% to 14%"
-    \s*(?:{_SEP})\s*
+    \s*(?P<sep>{_SEP})\s*
+    (?P<sign_hi>{_SIGN})?
+    \s*
     (?P<cur2>{_CUR})?
     \s*
+    (?P<sign_hi_in>{_SIGN})?
     (?P<hi>{_NUM})
     (?:\s*(?P<himag>{_MAG})(?![a-z]))?
     (?:\s*(?P<unit>{_PCT}|{_BPS})(?![a-z]))?

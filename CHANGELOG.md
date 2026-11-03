@@ -6,6 +6,15 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+- Parser no longer merges two different quantities into one range. `"grew 2% to $391.04
+  billion"` was read as a percent-tagged range (2e9, 391.04e9) whose span bracketed, and so
+  passed, any truth between them. A range is now rejected when its sides carry different
+  units (`%` vs `$`, `bps` vs `%`), when a rate unit sits only on the first value, when a
+  currency symbol sits only on the second value, or when it is a change phrased
+  "from X to Y" ("ranges from X to Y" is still a range). Retires known limitation #3.
+- Ranges accept signed endpoints (`-$1.2 to -$1.4B`, `-5% to -3%`).
+
 ## [0.1.1] - 2026-05-24
 
 ### Added
