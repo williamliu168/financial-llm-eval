@@ -129,3 +129,51 @@ def test_spans_point_into_source_text():
     p = only(text)
     start, end = p.span
     assert text[start:end].strip() == "$1.2B"
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "FY2024",
+        "Q3",
+        "1Q24",
+        "Form 10-K",
+        "an 8-K filing",
+        "COVID-19",
+        "a 3-for-1 split",
+        "Item 7A",
+    ],
+)
+def test_identifier_digits_are_not_numbers(text):
+    assert find_numbers(text) == []
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("US$3.4 million", 3.4e6),  # currency glued to a letter is still a quantity
+        ("trades at 12.5x earnings", 12.5),  # a multiple is a quantity
+        ("$3.4B.", 3.4e9),
+        ("2023-2024", 2023.5),  # a bare year range is not an identifier
+    ],
+)
+def test_identifier_guard_keeps_quantities(text, expected):
+    assert only(text).value == pytest.approx(expected)
+
+
+def test_scale_header_needs_a_word_boundary():
+    assert only("EPS came within millions of guidance at 6.08").value == pytest.approx(6.08)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "for the fiscal year ended September 28, 2024, revenue was $391.04 billion",
+        "as of Sept. 28, 2024 revenue was $391.04 billion",
+        "as of 2024-09-28 revenue was $391.04 billion",
+        "as of 9/28/2024 revenue was $391.04 billion",
+        "as of 28 September 2024 revenue was $391.04 billion",
+    ],
+)
+def test_dates_are_not_candidates(text):
+    assert only(text).value == pytest.approx(391.04e9)

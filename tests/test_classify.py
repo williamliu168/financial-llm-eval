@@ -71,3 +71,52 @@ class TestRanges:
 def test_candidates_are_recorded_for_transparency():
     r = verify("5 cats, 3 dogs, $7M revenue", 7_000_000)
     assert len(r.candidates) == 3
+
+
+@pytest.mark.parametrize(
+    "answer,truth",
+    [
+        ("Per its Form 10-K, diluted EPS was $6.80.", 10.0),  # "10" from "10-K"
+        ("In Q3 2026, diluted EPS was $1.50.", 3.0),  # "3" from "Q3"
+    ],
+)
+def test_identifier_digits_cannot_produce_a_false_pass(answer, truth):
+    assert not verify(answer, truth).passed
+
+
+def test_strict_selection_survives_citations():
+    r = verify(
+        "Per the FY2024 Form 10-K, revenue was $391.04 billion", 391_040_000_000, select="only"
+    )
+    assert r.verdict == Verdict.EXACT
+
+
+class TestSignInWords:
+    @pytest.mark.parametrize(
+        "answer,truth",
+        [
+            ("The company reported a net loss of $1.2 billion.", -1_200_000_000),
+            ("Net income was negative $88.5 billion", -88_500_000_000),
+            ("Diluted loss per share was $0.56", -0.56),
+            ("Net loss attributable to common stockholders was $31.3 million", -31_268_000),
+            ("a net loss of $(1.2) billion", -1_200_000_000),  # no double negation
+        ],
+    )
+    def test_loss_wording_carries_the_sign(self, answer, truth):
+        assert verify(answer, truth).passed
+
+    def test_loss_stated_for_a_profit_is_a_sign_error(self):
+        r = verify("The company reported a net loss of $1.2 billion.", 1_200_000_000)
+        assert r.verdict == Verdict.SIGN_ERROR
+        assert any("in words" in n for n in r.notes)
+
+    @pytest.mark.parametrize(
+        "answer,truth",
+        [
+            ("Despite the loss, revenue was $5B", 5_000_000_000),
+            ("The loss-making unit had revenue of $5B", 5_000_000_000),
+            ("A loss of 5% of customers", 5.0),  # rates are never negated
+        ],
+    )
+    def test_loss_nearby_does_not_flip_unrelated_figures(self, answer, truth):
+        assert verify(answer, truth).verdict == Verdict.EXACT

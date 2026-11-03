@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Iterable
 
-from .result import CategoryStat, GoldRecord, Report
+from .result import CategoryStat, GoldRecord, Report, TolKind
 from .verdict import Verdict
 from .verify import verify
 
@@ -14,7 +14,7 @@ def run_gold_set(
     records: Iterable[GoldRecord | dict],
     *,
     tol: float = 0.005,
-    tol_kind: str = "relative",
+    tol_kind: TolKind = "relative",
     select: str = "closest",
 ) -> Report:
     """Verify every record and return an aggregated :class:`Report`.
