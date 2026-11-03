@@ -19,5 +19,5 @@ Two of these (2 and 4) have first-class mitigations already in the API (`scale_h
 `select`). The rest are genuine v0.1 gaps, named here on purpose.
 
 **Retired:** "mixed units in one clause" (`"improved 250 bps to 12.5%"`, formerly #3) was
-fixed in 0.1.2: a range whose two sides carry different units, or a change phrased
+fixed in 0.2.0: a range whose two sides carry different units, or a change phrased
 "from X to Y", is no longer merged into one range. See `tests/test_range_coherence.py`.

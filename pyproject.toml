@@ -39,7 +39,7 @@ classifiers = [
 dependencies = []  # pure stdlib by design
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "pytest-cov", "ruff>=0.4", "mypy"]
+dev = ["pytest>=7", "pytest-cov", "ruff>=0.17,<0.18", "mypy"]
 
 [project.scripts]
 finnum = "finnum.cli:main"

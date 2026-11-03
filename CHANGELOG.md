@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-03
+
+### Changed
+- Dev tooling: pin `ruff>=0.17,<0.18`. `ruff>=0.4` installed whatever was newest, and ruff 0.17
+  started formatting Markdown code blocks, so a new release could break `ruff format --check`
+  without any code change.
+
 ### Fixed
 - Parser no longer merges two different quantities into one range. `"grew 2% to $391.04
   billion"` was read as a percent-tagged range (2e9, 391.04e9) whose span bracketed, and so
