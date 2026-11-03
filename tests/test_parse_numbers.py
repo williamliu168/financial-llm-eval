@@ -163,3 +163,17 @@ def test_identifier_guard_keeps_quantities(text, expected):
 
 def test_scale_header_needs_a_word_boundary():
     assert only("EPS came within millions of guidance at 6.08").value == pytest.approx(6.08)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "for the fiscal year ended September 28, 2024, revenue was $391.04 billion",
+        "as of Sept. 28, 2024 revenue was $391.04 billion",
+        "as of 2024-09-28 revenue was $391.04 billion",
+        "as of 9/28/2024 revenue was $391.04 billion",
+        "as of 28 September 2024 revenue was $391.04 billion",
+    ],
+)
+def test_dates_are_not_candidates(text):
+    assert only(text).value == pytest.approx(391.04e9)

@@ -12,7 +12,7 @@ import re
 
 from ..result import ParsedNumber
 from .normalize import detect_scale_header, normalize_range, normalize_single
-from .tokens import RANGE_RE, SINGLE_RE
+from .tokens import DATE_RE, RANGE_RE, SINGLE_RE
 
 # "from X to Y" states two values (a change), unless it is "ranges/ranging from X to Y".
 _FROM_BEFORE_RE = re.compile(r"\bfrom\s*$", re.IGNORECASE)
@@ -86,11 +86,15 @@ def find_numbers(text: str, scale_hint: int | None = None) -> list[ParsedNumber]
     default_scale = scale_hint if scale_hint is not None else detect_scale_header(text)
 
     found: list[ParsedNumber] = []
-    taken: list[tuple[int, int]] = []
+    taken: list[tuple[int, int]] = [d.span() for d in DATE_RE.finditer(text)]
 
     pos = 0
     while (m := RANGE_RE.search(text, pos)) is not None:
-        if _is_coherent_range(m, text) and not _is_identifier(text, m, *_RANGE_MARKERS):
+        if (
+            _is_coherent_range(m, text)
+            and not _is_identifier(text, m, *_RANGE_MARKERS)
+            and not _overlaps(m.span(), taken)
+        ):
             found.append(normalize_range(m, default_scale))
             taken.append(m.span())
             pos = m.end()

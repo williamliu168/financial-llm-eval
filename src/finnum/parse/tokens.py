@@ -111,3 +111,17 @@ LOSS_CUE_RE = re.compile(
 # "(in thousands)", "$ in millions", "amounts in billions" → a default scale multiplier
 # applied to bare numbers that carry no explicit magnitude of their own.
 SCALE_HEADER_RE = re.compile(r"\bin\s+(thousand|million|billion)s?\b", re.IGNORECASE)
+
+# Calendar dates are not quantities; their digits are masked before extraction so that
+# "fiscal year ended September 28, 2024" does not add 28 and 2024 as candidates.
+_MONTH = (
+    r"(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?"
+    r"|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?"
+)
+DATE_RE = re.compile(
+    rf"\b{_MONTH}\s+\d{{1,2}}(?:st|nd|rd|th)?,?\s+\d{{4}}\b"  # September 28, 2024
+    rf"|\b\d{{1,2}}\s+{_MONTH}\s+\d{{4}}\b"  # 28 September 2024
+    r"|\b\d{4}-\d{2}-\d{2}\b"  # 2024-09-28
+    r"|\b\d{1,2}/\d{1,2}/\d{2,4}\b",  # 9/28/2024
+    re.IGNORECASE,
+)

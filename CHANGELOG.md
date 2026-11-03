@@ -34,6 +34,10 @@ All notable changes to this project are documented here. The format follows
   negative (amounts only; never rates, never on top of an explicit sign). Previously a
   correct answer for a loss-making company was a SIGN_ERROR. `ParsedNumber.sign_from_words`
   records it, and a SIGN_ERROR carries a note when the sign came from wording.
+- Calendar dates (`September 28, 2024`, `Sept. 28, 2024`, `28 September 2024`,
+  `2024-09-28`, `9/28/2024`) are masked before extraction, so an answer that echoes the
+  period ("for the fiscal year ended September 28, 2024") still works with
+  `select="only"`/`"first"`, the mitigation recommended for known limitation #4.
 
 ## [0.1.1] - 2026-05-24
 
