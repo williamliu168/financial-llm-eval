@@ -35,6 +35,8 @@ _NUM = r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+"
 _MAG = r"thousands?|millions?|billions?|trillions?|mn|bn|mm|[kmbt]"
 _CUR = r"[$€£¥]"
 _SIGN = r"[-+−]"  # ASCII -, +, and the Unicode minus sign
+# A sign must touch what it negates: "-$5B" is negative, "Revenue - $5B" uses a dash.
+_GLUED_SIGN = rf"{_SIGN}(?=[$€£¥(\d.])"
 _APPROX = r"~|≈|\b(?:about|approximately|approx\.?|roughly|around|circa)\b"
 _PCT = r"%|percent|pct"
 _BPS = r"bps|bp|basis\s+points?"
@@ -46,7 +48,7 @@ SINGLE_RE = re.compile(
     rf"""
     (?P<approx>{_APPROX})?
     \s*
-    (?P<sign1>{_SIGN})?        # sign before the currency symbol, e.g. -$88.5B
+    (?P<sign1>{_GLUED_SIGN})?  # sign before the currency symbol, e.g. -$88.5B
     \s*
     (?P<cur1>{_CUR})?          # currency before an opening paren, e.g. $(1.2)
     \s*
@@ -72,7 +74,7 @@ RANGE_RE = re.compile(
     rf"""
     (?P<approx>{_APPROX})?
     \s*
-    (?P<sign_lo>{_SIGN})?
+    (?P<sign_lo>{_GLUED_SIGN})?
     \s*
     (?P<cur1>{_CUR})?
     \s*
@@ -81,7 +83,7 @@ RANGE_RE = re.compile(
     (?:\s*(?P<lomag>{_MAG})(?![a-z]))?
     (?:\s*(?P<unit_lo>{_PCT}|{_BPS})(?![a-z]))?   # unit on the first element, e.g. "12% to 14%"
     \s*(?P<sep>{_SEP})\s*
-    (?P<sign_hi>{_SIGN})?
+    (?P<sign_hi>{_GLUED_SIGN})?
     \s*
     (?P<cur2>{_CUR})?
     \s*

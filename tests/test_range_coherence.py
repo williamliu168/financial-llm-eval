@@ -87,3 +87,20 @@ def test_mixed_unit_clause_now_verifies():  # formerly KNOWN_LIMITATIONS #3
 
 def test_signed_range_brackets_a_negative_truth():
     assert verify("a loss of -$1.2 to -$1.4B", -1_300_000_000).passed
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Revenue guidance - $5 to $6 billion", (5e9, 6e9)),  # a spaced hyphen is a dash
+        ("Revenue - 5% to 6%", (5.0, 6.0)),
+    ],
+)
+def test_spaced_hyphen_is_a_dash_not_a_minus(text, expected):
+    (p,) = find_numbers(text)
+    assert p.range_value == pytest.approx(expected)
+
+
+def test_spaced_hyphen_before_a_single_amount_is_a_dash():
+    (p,) = find_numbers("Revenue - $5B")
+    assert p.value == pytest.approx(5e9)

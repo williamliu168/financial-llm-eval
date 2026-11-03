@@ -14,6 +14,8 @@ All notable changes to this project are documented here. The format follows
   currency symbol sits only on the second value, or when it is a change phrased
   "from X to Y" ("ranges from X to Y" is still a range). Retires known limitation #3.
 - Ranges accept signed endpoints (`-$1.2 to -$1.4B`, `-5% to -3%`).
+- A sign must touch what it negates: `"Revenue - $5B"` (a spaced dash) was read as
+  -5e9; `-$5B` and `$-5B` are still negative.
 - Digits inside identifiers are no longer extracted as numbers: `FY2024`, `Q3`, `1Q24`,
   `Form 10-K`, `COVID-19`, `3-for-1`, `Item 7A`. They produced false passes under the
   default `closest` selection (`"Per its Form 10-K, EPS was $6.80"` vs a truth of 10 was
